@@ -1,3 +1,17 @@
+export const BASIC_LAND_NAMES = new Set([
+  "Plains",
+  "Island",
+  "Swamp",
+  "Mountain",
+  "Forest",
+  "Wastes",
+  "Snow-Covered Plains",
+  "Snow-Covered Island",
+  "Snow-Covered Swamp",
+  "Snow-Covered Mountain",
+  "Snow-Covered Forest",
+]);
+
 export const CARD_LANGUAGES = [
   { code: "en", label: "English" },
   { code: "de", label: "Deutsch" },

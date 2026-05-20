@@ -15,6 +15,7 @@ import { GenerateButton } from "@/components/GenerateButton";
 import { CacheInfo } from "@/components/CacheInfo";
 import { DEFAULT_PRESET_ID, DEVICE_PRESETS } from "@/lib/devices";
 import type { ParsedCard, CardLanguageCode } from "@/lib/types";
+import { BASIC_LAND_NAMES } from "@/lib/types";
 import { BookOpen, History } from "lucide-react";
 
 type SourceType = "manabox_csv" | "manabox_arena" | "moxfield";
@@ -31,6 +32,11 @@ export default function HomePage() {
   const [height, setHeight] = useState(defaultPreset.height);
   const [lang, setLang] = useState<CardLanguageCode>("en");
   const [skipFallback, setSkipFallback] = useState(false);
+  const [skipBasicLands, setSkipBasicLands] = useState(false);
+
+  const visibleCards = skipBasicLands
+    ? cards.filter((c) => !BASIC_LAND_NAMES.has(c.name))
+    : cards;
 
   function handleManaBoxParsed(parsed: ParsedCard[], fmt: string, raw: string) {
     setCards(parsed);
@@ -135,11 +141,20 @@ export default function HomePage() {
               skipFallback={skipFallback}
               onSkipFallbackChange={setSkipFallback}
             />
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={skipBasicLands}
+                onChange={(e) => setSkipBasicLands(e.target.checked)}
+                className="h-3.5 w-3.5 accent-primary"
+              />
+              <span className="text-sm">Basic Lands weglassen</span>
+            </label>
           </CardContent>
         </Card>
 
         {/* Step 3: only shown after cards are loaded */}
-        {cards.length > 0 && (
+        {visibleCards.length > 0 && (
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
@@ -148,10 +163,10 @@ export default function HomePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <CardPreviewList cards={cards} lang={lang} />
+              <CardPreviewList cards={visibleCards} lang={lang} />
               <Separator />
               <GenerateButton
-                cards={cards}
+                cards={visibleCards}
                 deckName={deckName}
                 deviceLabel={deviceLabel}
                 width={width}

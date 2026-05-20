@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --yes)",
+      "Bash(npx create-next-app@latest mtg2epub-tmp --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --yes)",
+      "Bash(Get-ChildItem mtg2epub-tmp *)",
+      "Bash(Select-Object -First 30)",
+      "Bash(rm -rf \"C:/Users/JensF/Documents/Development/mtg2epub-tmp\" && echo \"Temp dir removed\")",
+      "Bash(npx shadcn@latest init --yes --defaults)",
+      "Bash(npx shadcn@latest add card input label select tabs textarea badge progress separator --yes)",
+      "Bash(npx shadcn@latest add sonner --yes)",
+      "Bash(mkdir -p \"C:/Users/JensF/Documents/Development/MTG2epub/src/app/api/parse\" && mkdir -p \"C:/Users/JensF/Documents/Development/MTG2epub/src/app/api/moxfield\" && mkdir -p \"C:/Users/JensF/Documents/Development/MTG2epub/src/app/api/scryfall\" && mkdir -p \"C:/Users/JensF/Documents/Development/MTG2epub/src/app/api/generate\" && mkdir -p \"C:/Users/JensF/Documents/Development/MTG2epub/src/app/api/history/[id]\" && echo \"Dirs created\")",
+      "Bash(node -e ' *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

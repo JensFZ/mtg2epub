@@ -13,9 +13,13 @@ import { Label } from "@/components/ui/label";
 interface Props {
   value: CardLanguageCode;
   onChange: (lang: CardLanguageCode) => void;
+  skipFallback: boolean;
+  onSkipFallbackChange: (skip: boolean) => void;
 }
 
-export function LanguageSelector({ value, onChange }: Props) {
+export function LanguageSelector({ value, onChange, skipFallback, onSkipFallbackChange }: Props) {
+  const isNonEnglish = value !== "en";
+
   return (
     <div>
       <Label htmlFor="card-language">Kartensprache</Label>
@@ -36,9 +40,23 @@ export function LanguageSelector({ value, onChange }: Props) {
           ))}
         </SelectContent>
       </Select>
-      <p className="text-xs text-muted-foreground mt-1">
-        Falls eine Karte nicht in dieser Sprache verfügbar ist, wird automatisch die englische Version verwendet.
-      </p>
+      {isNonEnglish ? (
+        <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={skipFallback}
+            onChange={(e) => onSkipFallbackChange(e.target.checked)}
+            className="h-3.5 w-3.5 accent-primary"
+          />
+          <span className="text-xs text-muted-foreground">
+            Karten ohne {CARD_LANGUAGES.find((l) => l.code === value)?.label}-Version weglassen
+          </span>
+        </label>
+      ) : (
+        <p className="text-xs text-muted-foreground mt-1">
+          Falls eine Karte nicht in dieser Sprache verfügbar ist, wird automatisch die englische Version verwendet.
+        </p>
+      )}
     </div>
   );
 }

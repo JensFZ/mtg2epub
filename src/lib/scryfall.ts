@@ -108,7 +108,8 @@ async function fetchCardByName(name: string, lang?: string): Promise<ScryfallCar
 
 async function resolveCard(
   card: ParsedCard,
-  lang: string
+  lang: string,
+  skipFallback = false
 ): Promise<{ png: string; normal: string } | null> {
   const isEnglish = !lang || lang === "en";
   let data: ScryfallCard | null = null;
@@ -138,8 +139,8 @@ async function resolveCard(
     // Fall back: search by name in target language (any printing)
     if (!data) data = await fetchCardByName(card.name, lang);
 
-    // Last resort: English fallback
-    if (!data) data = englishCard;
+    // Last resort: English fallback — skip if caller opted out
+    if (!data && !skipFallback) data = englishCard;
   }
 
   if (!data) return null;
@@ -185,7 +186,11 @@ export function cardKey(name: string, lang: string): string {
   return `${name.toLowerCase()}:${lang}`;
 }
 
-export async function resolveCards(cards: ParsedCard[], lang = "en"): Promise<ResolvedCard[]> {
+export async function resolveCards(
+  cards: ParsedCard[],
+  lang = "en",
+  skipFallback = false
+): Promise<ResolvedCard[]> {
   const limit = createLimiter(4);
 
   const results = await Promise.all(
@@ -204,7 +209,7 @@ export async function resolveCards(cards: ParsedCard[], lang = "en"): Promise<Re
         }
 
         // Cache miss — fetch from Scryfall and persist URLs
-        const urls = await resolveCard(card, lang);
+        const urls = await resolveCard(card, lang, skipFallback);
         if (urls?.png && urls?.normal) {
           setCacheUrls(key, urls.normal, urls.png);
         }

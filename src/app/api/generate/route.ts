@@ -15,6 +15,7 @@ interface GenerateRequest {
   width: number;
   height: number;
   lang: string;
+  skipFallback?: boolean;
   sourceType: "manabox_csv" | "manabox_arena" | "moxfield";
   sourceRaw: string;
 }
@@ -29,7 +30,7 @@ function sanitizeEpubFilename(name: string): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json() as GenerateRequest;
-    const { cards, deckName, deviceLabel, width, height, lang, sourceType, sourceRaw } = body;
+    const { cards, deckName, deviceLabel, width, height, lang, skipFallback, sourceType, sourceRaw } = body;
 
     if (!cards?.length) {
       return NextResponse.json({ error: "Keine Karten angegeben" }, { status: 400 });
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Resolve card images in requested language
-    const resolved = await resolveCards(cards, lang ?? "en");
+    const resolved = await resolveCards(cards, lang ?? "en", skipFallback ?? false);
     const validCards = resolved.filter((c) => c.imageUrl);
 
     if (validCards.length === 0) {

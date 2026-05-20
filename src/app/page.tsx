@@ -30,6 +30,7 @@ export default function HomePage() {
   const [width, setWidth] = useState(defaultPreset.width);
   const [height, setHeight] = useState(defaultPreset.height);
   const [lang, setLang] = useState<CardLanguageCode>("en");
+  const [skipFallback, setSkipFallback] = useState(false);
 
   function handleManaBoxParsed(parsed: ParsedCard[], fmt: string, raw: string) {
     setCards(parsed);
@@ -125,7 +126,15 @@ export default function HomePage() {
               customHeight={height}
               onChange={handleDeviceChange}
             />
-            <LanguageSelector value={lang} onChange={setLang} />
+            <LanguageSelector
+              value={lang}
+              onChange={(l) => {
+                setLang(l);
+                if (l === "en") setSkipFallback(false);
+              }}
+              skipFallback={skipFallback}
+              onSkipFallbackChange={setSkipFallback}
+            />
           </CardContent>
         </Card>
 
@@ -148,6 +157,7 @@ export default function HomePage() {
                 width={width}
                 height={height}
                 lang={lang}
+                skipFallback={skipFallback}
                 sourceType={sourceType}
                 sourceRaw={sourceRaw}
                 onError={handleError}

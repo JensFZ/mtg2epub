@@ -13,6 +13,7 @@ interface Props {
   width: number;
   height: number;
   lang: string;
+  skipFallback: boolean;
   sourceType: "manabox_csv" | "manabox_arena" | "moxfield";
   sourceRaw: string;
   onError: (msg: string) => void;
@@ -25,6 +26,7 @@ export function GenerateButton({
   width,
   height,
   lang,
+  skipFallback,
   sourceType,
   sourceRaw,
   onError,
@@ -54,6 +56,7 @@ export function GenerateButton({
           width,
           height,
           lang,
+          skipFallback,
           sourceType,
           sourceRaw,
         }),
